@@ -1,14 +1,17 @@
 'use strict';
+
 import React, {Component} from "react";
-import {AppRegistry,ActivityIndicator, Animated, FlatList, ScrollView, StyleSheet, Text, View} from "react-native";
+import {AppRegistry,ActivityIndicator,TouchableOpacity, Animated, FlatList, ScrollView, StyleSheet, Text, View} from "react-native";
+
+
 
 const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
 //const REQUEST_URL = 'https://api.github.com/search/repositories?q=javascript&sort=stars';
 const REQUEST_URL = 'http://47.93.199.219:8080/index/listjson/';
 
-export default  class Homepage extends Component {
+export default class Homepage extends Component {
     static navigationOptions = {
-        title: 'gamenews',
+        title: '游戏头条首页',
     }
 
     constructor(props) {
@@ -87,12 +90,24 @@ export default  class Homepage extends Component {
 
     //返回itemView
     renderItemView({item}) {
+        const { navigate } = this.props.navigation;
         return (
-            <View>
-                <Text style={styles.title}>{item.value.title} )</Text>
-                <Text style={styles.content}>簡介： {item.value.description}</Text>
-            </View>
+        <TouchableOpacity key={item.value.title} activeOpacity={1}  onPress={() => navigate('Detail', { url: item.value.url })}>
+                     <View>
+                                       <Text style={styles.title}>{item.value.title} )</Text>
+                                       <Text style={styles.content}>簡介： {item.value.description}</Text>
+                     </View>
+         </TouchableOpacity>
+
+
+
         );
+    }
+
+       //点击列表点击每一行
+    clickItem(item) {
+           alert(item.value.title)
+           //this.props.navigation('Detail', { name: 'Jane' })
     }
 
     renderSeparator = () => {
@@ -112,13 +127,12 @@ export default  class Homepage extends Component {
         return (
             <ScrollView >
                 <Text >
-                    Data:
+                    游戏头条
                 </Text>
                 <AnimatedFlatList
                     data={this.state.dataArray}
-                    renderItem={this.renderItemView}
-
-                   ItemSeparatorComponent={this.renderSeparator}
+                    renderItem={this.renderItemView.bind(this)}
+                    ItemSeparatorComponent={this.renderSeparator}
                 />
             </ScrollView>
         );
